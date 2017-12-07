@@ -4,7 +4,10 @@
   "description": "Custom Graphql scalar types",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "lab -t 100 -L -a chai",
+    "test-debug": "lab -a code",
+    "test-cov-html": "lab -r html -o coverage.html -a chai",
+    "lint": "node_modules/.bin/eslint --fix src/ test/"
   },
   "repository": {
     "type": "git",
@@ -15,5 +18,18 @@
   "bugs": {
     "url": "https://github.com/Samueljoli/untitled/issues"
   },
-  "homepage": "https://github.com/Samueljoli/untitled#readme"
+  "homepage": "https://github.com/Samueljoli/untitled#readme",
+  "dependencies": {
+    "hoek": "5.0.2"
+  },
+  "peerDependencies": {
+    "graphql": "0.x.x",
+    "graphql-tools": "2.x.x"
+  },
+  "devDependencies": {
+    "chai": "4.x.x",
+    "graphql": "0.x.x",
+    "graphql-tools": "2.x.x",
+    "lab": "15.x.x"
+  }
 }

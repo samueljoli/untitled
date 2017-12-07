@@ -1,0 +1,19 @@
+{
+  "name": "untitled",
+  "version": "0.0.0",
+  "description": "Custom Graphql scalar types",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Samueljoli/untitled.git"
+  },
+  "author": "Samuel Joli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Samueljoli/untitled/issues"
+  },
+  "homepage": "https://github.com/Samueljoli/untitled#readme"
+}

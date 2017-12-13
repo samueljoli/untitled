@@ -35,4 +35,11 @@ describe('Implementation', () => {
 
         string().describe('Thing that of which I am').description.should.equal('Thing that of which I am');
     });
+
+    it('should support default', () => {
+
+        const { string } = Lib;
+
+        string().default('default value').validate().should.equal('default value');
+    });
 });

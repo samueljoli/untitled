@@ -28,4 +28,11 @@ describe('Implementation', () => {
 
         string().min(2).validate(ast).should.equal('123');
     });
+
+    it('should support descriptions', () => {
+
+        const { string } = Lib;
+
+        string().describe('Thing that of which I am').description.should.equal('Thing that of which I am');
+    });
 });

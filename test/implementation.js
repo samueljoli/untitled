@@ -40,6 +40,14 @@ describe('Implementation', () => {
 
         const { string } = Lib;
 
-        string().default('default value').validate().should.equal('default value');
+        string().default('default value').parseLiteral().should.equal('default value');
+    });
+
+    it('should not use default value if target is provided', () => {
+
+        const { string } = Lib;
+        const ast = { kind: 'StringValue', value: 'test' };
+
+        string().default('me').parseLiteral(ast).should.equal('test');
     });
 });

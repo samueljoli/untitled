@@ -50,4 +50,13 @@ describe('Implementation', () => {
 
         string().default('me').parseLiteral(ast).should.equal('test');
     });
+
+    it('should support a whitelist of values', () => {
+
+        const { string } = Lib;
+        const ast = { kind: 'StringValue', value: '' };
+
+        string().allow('').parseLiteral(ast).should.equal('');
+
+    });
 });

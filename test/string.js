@@ -27,6 +27,16 @@ describe('StringScalar', () => {
         (string().min(3).parseLiteral(ast) === null).should.equal(true);
     });
 
+    it('should return null for empty strings', () => {
+
+        const { string } = Lib;
+        const value = '';
+        const ast = internals.buildAST({ value });
+        ast.test = true;
+
+        (string().parseLiteral(ast) === null).should.equal(true);
+    });
+
     describe('min()', () => {
 
         it('should support min string length', () => {

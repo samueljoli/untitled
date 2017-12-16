@@ -50,20 +50,6 @@ describe('Implementation', () => {
         string().describe('Thing that of which I am').description.should.equal('Thing that of which I am');
     });
 
-    it('should support default', () => {
-
-        const { string } = Lib;
-
-        string().default('default value').parseLiteral().should.equal('default value');
-    });
-
-    it('should not use default value if target is provided', () => {
-
-        const { string } = Lib;
-        const ast = { kind: 'StringValue', value: 'test' };
-
-        string().default('me').parseLiteral(ast).should.equal('test');
-    });
 
     it('should support a whitelist of values', () => {
 

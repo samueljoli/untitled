@@ -24,7 +24,7 @@ describe('StringScalar', () => {
         const { string } = Lib;
         const ast = { value: true, kind: 'BooleanValue' };
 
-        (string().min(3).parseLiteral(ast) === null).should.equal(true);
+        (string().parseLiteral(ast) === null).should.equal(true);
     });
 
     it('should return null for empty strings', () => {
@@ -35,6 +35,21 @@ describe('StringScalar', () => {
         ast.test = true;
 
         (string().parseLiteral(ast) === null).should.equal(true);
+    });
+
+    it('should support default', () => {
+
+        const { string } = Lib;
+
+        string().default('default value').parseLiteral().should.equal('default value');
+    });
+
+    it('should not use default value if target is provided', () => {
+
+        const { string } = Lib;
+        const ast = { kind: 'StringValue', value: 'test' };
+
+        string().default('me').parseLiteral(ast).should.equal('test');
     });
 
     describe('min()', () => {

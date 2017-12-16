@@ -94,6 +94,15 @@ describe('StringScalar', () => {
         });
     });
 
+    it('should support min and max', () => {
+
+        const { string } = Lib;
+        const value = '1234';
+        const ast = internals.buildAST({ value });
+
+        string().min(2).max(5).parseLiteral(ast).should.equal('1234');
+    });
+
     describe('guid()', () => {
 
         it('should support guid', () => {

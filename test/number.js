@@ -82,8 +82,15 @@ describe('NumberScalar', () => {
 
             (number().max(2).parseLiteral(ast) === null).should.equal(true);
         });
+    });
 
+    it('should support both min and max rules', () => {
 
+        const { number } = Lib;
+        const value = 4;
+        const ast = internals.buildAST({ value });
+
+        number().min(2).max(5).parseLiteral(ast).should.equal(value);
     });
 });
 

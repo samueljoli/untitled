@@ -29,6 +29,20 @@ describe('Implementation', () => {
         string().min(2).validate(ast).should.equal('123');
     });
 
+    it('should be able to serialize itself', () => {
+
+        const { string } = Lib;
+
+        string().serialize('123').should.equal('123');
+    });
+
+    it('should be able to parse it\'s value', () => {
+
+        const { string } = Lib;
+
+        string().parseValue('123').should.equal('123');
+    });
+
     it('should support descriptions', () => {
 
         const { string } = Lib;

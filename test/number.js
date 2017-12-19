@@ -134,6 +134,27 @@ describe('NumberScalar', () => {
             (number().negative().parseLiteral(ast) === null).should.equal(true);
         });
     });
+
+    describe('multiple()', () => {
+
+        it('should support multiple', () => {
+
+            const { number } = Lib;
+            const value = 8;
+            const ast = internals.buildAST({ value });
+
+            number().multiple(4).parseLiteral(ast).should.equal(value);
+        });
+
+        it('should return null if value is not a multiple of base', () => {
+
+            const { number } = Lib;
+            const value = 2;
+            const ast = internals.buildAST({ value });
+
+            (number().multiple(5).parseLiteral(ast) === null).should.equal(true);
+        });
+    });
 });
 
 internals.buildAST = (args) => {

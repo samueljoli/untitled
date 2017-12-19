@@ -123,6 +123,27 @@ describe('StringScalar', () => {
             (string().guid().parseLiteral(ast) === null).should.equal(true);
         });
     });
+
+    describe('hex()', () => {
+
+        it('should support hex', () => {
+
+            const value = '#ffff';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().hex().parseLiteral(ast).should.equal(value);
+        });
+
+        it('should return null when string is not a valid hex', () => {
+
+            const value = '#f0';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            (string().hex().parseLiteral(ast) === null).should.equal(true);
+        });
+    });
 });
 
 internals.buildAST = (args) => {

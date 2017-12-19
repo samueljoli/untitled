@@ -3,7 +3,7 @@
 const Lab = require('lab');
 const { script, assertions } = Lab;
 const lab = exports.lab = script();
-const { describe, it } = lab;
+const { describe, it, expect } = lab;
 assertions.should();
 
 const Lib = require('../lib');
@@ -58,5 +58,17 @@ describe('Implementation', () => {
 
         string().allow('').parseLiteral(ast).should.equal('');
 
+    });
+
+    it('should support a blacklist of values', () => {
+
+        const { string } = Lib;
+        const ast = { kind: 'StringValue', value: 'a' };
+        const subject = function () {
+
+            return string().disallow('a').parseLiteral(ast);
+        };
+
+        expect(subject).to.throw(Error, 'ValidationError: Value is disallowed');
     });
 });

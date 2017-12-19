@@ -3,7 +3,7 @@
 const Lab = require('lab');
 const { script, assertions } = Lab;
 const lab = exports.lab = script();
-const { describe, it } = lab;
+const { describe, it, expect } = lab;
 assertions.should();
 
 const Lib = require('../lib');
@@ -14,8 +14,12 @@ describe('NumberScalar', () => {
     it('should create a custom scalar type', () => {
 
         const { number } = Lib;
+        const subject = () => {
 
-        number.bind(null).should.not.throw();
+            return number();
+        };
+
+        expect(subject).to.not.throw();
         number().name.should.equal('NumberScalar');
     });
 
@@ -23,8 +27,12 @@ describe('NumberScalar', () => {
 
         const { number } = Lib;
         const ast = { value: true, kind: 'BooleanValue' };
+        const subject = () => {
 
-        (number().parseLiteral(ast) === null).should.equal(true);
+            return number().parseLiteral(ast);
+        };
+
+        expect(subject).to.throw(Error, 'KindError: expected IntValue but got BooleanValue');
     });
 
     it('should support default', () => {
@@ -58,8 +66,12 @@ describe('NumberScalar', () => {
             const { number } = Lib;
             const value = 1;
             const ast = internals.buildAST({ value });
+            const subject = () => {
 
-            (number().min(2).parseLiteral(ast) === null).should.equal(true);
+                return number().min(2).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'ValidationError: Value does not meet min');
         });
     });
 
@@ -79,8 +91,12 @@ describe('NumberScalar', () => {
             const { number } = Lib;
             const value = 3;
             const ast = internals.buildAST({ value });
+            const subject = () => {
 
-            (number().max(2).parseLiteral(ast) === null).should.equal(true);
+                return number().max(2).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'ValidationError: Value exceeds max');
         });
     });
 
@@ -109,8 +125,12 @@ describe('NumberScalar', () => {
             const { number } = Lib;
             const value = -4;
             const ast = internals.buildAST({ value });
+            const subject = () => {
 
-            (number().positive().parseLiteral(ast) === null).should.equal(true);
+                return number().positive().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'Value must be a positive int');
         });
     });
 
@@ -130,8 +150,12 @@ describe('NumberScalar', () => {
             const { number } = Lib;
             const value = 2;
             const ast = internals.buildAST({ value });
+            const subject = () => {
 
-            (number().negative().parseLiteral(ast) === null).should.equal(true);
+                return number().negative().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'Value must be a negative int');
         });
     });
 
@@ -151,8 +175,12 @@ describe('NumberScalar', () => {
             const { number } = Lib;
             const value = 2;
             const ast = internals.buildAST({ value });
+            const subject = () => {
 
-            (number().multiple(5).parseLiteral(ast) === null).should.equal(true);
+                return number().multiple(5).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'ValidationError: Value is not a multiple');
         });
     });
 
@@ -172,9 +200,17 @@ describe('NumberScalar', () => {
             const { number } = Lib;
             const ast1 = internals.buildAST({ value: 4 });
             const ast2 = internals.buildAST({ value: 0 });
+            const subject1 = () => {
 
-            (number().range(1, 3).parseLiteral(ast1) === null).should.equal(true);
-            (number().range(1, 3).parseLiteral(ast2) === null).should.equal(true);
+                return number().range(1, 3).parseLiteral(ast1);
+            };
+            const subject2 = () => {
+
+                return number().range(1, 3).parseLiteral(ast2);
+            };
+
+            expect(subject1).to.throw(Error, 'ValidationError: Value must fall within a specific range');
+            expect(subject2).to.throw(Error, 'ValidationError: Value must fall within a specific range');
         });
     });
 
@@ -194,8 +230,12 @@ describe('NumberScalar', () => {
             const { number } = Lib;
             const value = 4.35;
             const ast = internals.buildAST({ value });
+            const subject = () => {
 
-            (number().integer().parseLiteral(ast) === null).should.equal(true);
+                return number().integer().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'ValidationError: Value must be an integer');
         });
     });
 });

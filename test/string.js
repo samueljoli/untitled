@@ -3,7 +3,7 @@
 const Lab = require('lab');
 const { script, assertions } = Lab;
 const lab = exports.lab = script();
-const { describe, it } = lab;
+const { describe, it, expect } = lab;
 assertions.should();
 
 const Lib = require('../lib');
@@ -14,8 +14,12 @@ describe('StringScalar', () => {
     it('should create a custom scalar type', () => {
 
         const { string } = Lib;
+        const subject = () => {
 
-        string.bind(null).should.not.throw();
+            return string();
+        };
+
+        expect(subject).to.not.throw();
         string().name.should.equal('StringScalar');
     });
 
@@ -23,8 +27,12 @@ describe('StringScalar', () => {
 
         const { string } = Lib;
         const ast = { value: true, kind: 'BooleanValue' };
+        const subject = () => {
 
-        (string().parseLiteral(ast) === null).should.equal(true);
+            return string().parseLiteral(ast);
+        };
+
+        expect(subject).to.throw(Error, 'KindError: expected StringValue, but got BooleanValue');
     });
 
     it('should return null for empty strings', () => {
@@ -32,9 +40,12 @@ describe('StringScalar', () => {
         const { string } = Lib;
         const value = '';
         const ast = internals.buildAST({ value });
-        ast.test = true;
+        const subject = function () {
 
-        (string().parseLiteral(ast) === null).should.equal(true);
+            return string().parseLiteral(ast);
+        };
+
+        expect(subject).to.throw(Error, 'ValidationError: String can not be empty');
     });
 
     it('should support default', () => {
@@ -68,8 +79,12 @@ describe('StringScalar', () => {
             const { string } = Lib;
             const value = '1';
             const ast = internals.buildAST({ value });
+            const subject = () => {
 
-            (string().min(2).parseLiteral(ast) === null).should.equal(true);
+                return string().min(2).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'ValidationError: Value does not meet min');
         });
     });
 
@@ -89,8 +104,12 @@ describe('StringScalar', () => {
             const { string } = Lib;
             const value = '123';
             const ast = internals.buildAST({ value });
+            const subject = () => {
 
-            (string().max(2).parseLiteral(ast) === null).should.equal(true);
+                return string().max(2).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'ValidationError: Value exceeds max');
         });
     });
 
@@ -119,8 +138,12 @@ describe('StringScalar', () => {
             const value = '000-000';
             const { string } = Lib;
             const ast = internals.buildAST({ value });
+            const subject = () => {
 
-            (string().guid().parseLiteral(ast) === null).should.equal(true);
+                return string().guid().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'ValidationError: Value must be a valid guid');
         });
     });
 
@@ -140,8 +163,12 @@ describe('StringScalar', () => {
             const value = '#f0';
             const { string } = Lib;
             const ast = internals.buildAST({ value });
+            const subject = () => {
 
-            (string().hex().parseLiteral(ast) === null).should.equal(true);
+                return string().hex().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'ValidationError: Value must be a valid hex code');
         });
     });
 });

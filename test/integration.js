@@ -17,7 +17,7 @@ const internals = {};
 
 describe('Integration', () => {
 
-    it('should support string', async () => {
+    it('string()', async () => {
 
         const query = '{ subject( arg: "a") { key1 } }';
         const querySchema = new GraphQLObjectType({
@@ -43,7 +43,7 @@ describe('Integration', () => {
         res.data.subject.key1.should.equal('A');
     });
 
-    it('should support number', async () => {
+    it('number()', async () => {
 
         const query = '{ subject( arg: 2 ) { key2 } }';
         const querySchema = new GraphQLObjectType({

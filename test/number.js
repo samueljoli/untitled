@@ -92,6 +92,48 @@ describe('NumberScalar', () => {
 
         number().min(2).max(5).parseLiteral(ast).should.equal(value);
     });
+
+    describe('positive()', () => {
+
+        it('should support positive numbers', () => {
+
+            const { number } = Lib;
+            const value = 2;
+            const ast = internals.buildAST({ value });
+
+            number().positive().parseLiteral(ast).should.equal(value);
+        });
+
+        it('should return null when number is not positive', () => {
+
+            const { number } = Lib;
+            const value = -4;
+            const ast = internals.buildAST({ value });
+
+            (number().positive().parseLiteral(ast) === null).should.equal(true);
+        });
+    });
+
+    describe('negative()', () => {
+
+        it('should support negative numbers', () => {
+
+            const { number } = Lib;
+            const value = -4;
+            const ast = internals.buildAST({ value });
+
+            number().negative().parseLiteral(ast).should.equal(value);
+        });
+
+        it('should support negative numbers', () => {
+
+            const { number } = Lib;
+            const value = 2;
+            const ast = internals.buildAST({ value });
+
+            (number().negative().parseLiteral(ast) === null).should.equal(true);
+        });
+    });
 });
 
 internals.buildAST = (args) => {

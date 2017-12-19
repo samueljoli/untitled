@@ -177,6 +177,27 @@ describe('NumberScalar', () => {
             (number().range(1, 3).parseLiteral(ast2) === null).should.equal(true);
         });
     });
+
+    describe('integer()', () => {
+
+        it('should support integer', () => {
+
+            const { number } = Lib;
+            const value = 2;
+            const ast = internals.buildAST({ value });
+
+            number().integer().parseLiteral(ast).should.equal(value);
+        });
+
+        it('should return null when value is a float', () => {
+
+            const { number } = Lib;
+            const value = 4.35;
+            const ast = internals.buildAST({ value });
+
+            (number().integer().parseLiteral(ast) === null).should.equal(true);
+        });
+    });
 });
 
 internals.buildAST = (args) => {

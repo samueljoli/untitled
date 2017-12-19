@@ -155,6 +155,28 @@ describe('NumberScalar', () => {
             (number().multiple(5).parseLiteral(ast) === null).should.equal(true);
         });
     });
+
+    describe('range()', () => {
+
+        it('should support range', () => {
+
+            const { number } = Lib;
+            const value = 4;
+            const ast = internals.buildAST({ value });
+
+            number().range(2, 4).parseLiteral(ast).should.equal(value);
+        });
+
+        it('should return null when value does not fall within provided range', () => {
+
+            const { number } = Lib;
+            const ast1 = internals.buildAST({ value: 4 });
+            const ast2 = internals.buildAST({ value: 0 });
+
+            (number().range(1, 3).parseLiteral(ast1) === null).should.equal(true);
+            (number().range(1, 3).parseLiteral(ast2) === null).should.equal(true);
+        });
+    });
 });
 
 internals.buildAST = (args) => {

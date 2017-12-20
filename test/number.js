@@ -170,7 +170,7 @@ describe('NumberScalar', () => {
             number().multiple(4).parseLiteral(ast).should.equal(value);
         });
 
-        it('should return null if value is not a multiple of base', () => {
+        it.only('should return null if value is not a multiple of base', () => {
 
             const { number } = Lib;
             const value = 2;
@@ -180,7 +180,7 @@ describe('NumberScalar', () => {
                 return number().multiple(5).parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error, 'number must be a multiple of: ');
+            expect(subject).to.throw(Error, 'number must be a multiple of: 3');
         });
     });
 

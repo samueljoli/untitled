@@ -69,6 +69,6 @@ describe('Implementation', () => {
             return string().disallow('a').parseLiteral(ast);
         };
 
-        expect(subject).to.throw(Error, 'ValidationError: Value is disallowed');
+        expect(subject).to.throw(Error, 'value is not allowed');
     });
 });

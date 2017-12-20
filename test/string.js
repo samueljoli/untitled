@@ -45,7 +45,7 @@ describe('StringScalar', () => {
             return string().parseLiteral(ast);
         };
 
-        expect(subject).to.throw(Error, 'ValidationError: String can not be empty');
+        expect(subject).to.throw(Error, 'string can not be empty');
     });
 
     it('should support default', () => {
@@ -84,7 +84,7 @@ describe('StringScalar', () => {
                 return string().min(2).parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error, 'ValidationError: Value does not meet min');
+            expect(subject).to.throw(Error, 'string does not meet the minimum length specified');
         });
     });
 
@@ -109,7 +109,7 @@ describe('StringScalar', () => {
                 return string().max(2).parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error, 'ValidationError: Value exceeds max');
+            expect(subject).to.throw(Error, 'string exceeds maximum length allowed');
         });
     });
 
@@ -143,7 +143,7 @@ describe('StringScalar', () => {
                 return string().guid().parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error, 'ValidationError: Value must be a valid guid');
+            expect(subject).to.throw(Error, 'string is not a valid guid');
         });
     });
 
@@ -168,7 +168,7 @@ describe('StringScalar', () => {
                 return string().hex().parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error, 'ValidationError: Value must be a valid hex code');
+            expect(subject).to.throw(Error, 'string is not a valid hex code');
         });
     });
 });

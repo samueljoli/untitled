@@ -71,7 +71,7 @@ describe('NumberScalar', () => {
                 return number().min(2).parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error, 'ValidationError: Value does not meet min');
+            expect(subject).to.throw(Error, 'number does not meet the minimum value specified');
         });
     });
 
@@ -96,7 +96,7 @@ describe('NumberScalar', () => {
                 return number().max(2).parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error, 'ValidationError: Value exceeds max');
+            expect(subject).to.throw(Error, 'number exceeds maximum allowed');
         });
     });
 
@@ -130,7 +130,7 @@ describe('NumberScalar', () => {
                 return number().positive().parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error, 'Value must be a positive int');
+            expect(subject).to.throw(Error, 'number is not positive');
         });
     });
 
@@ -155,7 +155,7 @@ describe('NumberScalar', () => {
                 return number().negative().parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error, 'Value must be a negative int');
+            expect(subject).to.throw(Error, 'number is not negative');
         });
     });
 
@@ -180,7 +180,7 @@ describe('NumberScalar', () => {
                 return number().multiple(5).parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error, 'ValidationError: Value is not a multiple');
+            expect(subject).to.throw(Error, 'number must be a multiple of: ');
         });
     });
 
@@ -209,8 +209,8 @@ describe('NumberScalar', () => {
                 return number().range(1, 3).parseLiteral(ast2);
             };
 
-            expect(subject1).to.throw(Error, 'ValidationError: Value must fall within a specific range');
-            expect(subject2).to.throw(Error, 'ValidationError: Value must fall within a specific range');
+            expect(subject1).to.throw(Error, 'number must fall within specified range');
+            expect(subject2).to.throw(Error, 'number must fall within specified range');
         });
     });
 
@@ -235,7 +235,7 @@ describe('NumberScalar', () => {
                 return number().integer().parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error, 'ValidationError: Value must be an integer');
+            expect(subject).to.throw(Error, 'number must be an integer');
         });
     });
 });

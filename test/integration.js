@@ -15,7 +15,7 @@ const {
 
 const internals = {};
 
-describe('Integration', () => {
+describe.skip('Integration', () => {
 
     it('string()', async () => {
 

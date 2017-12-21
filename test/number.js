@@ -238,6 +238,19 @@ describe('NumberScalar', () => {
             expect(subject).to.throw(Error, 'number must be an integer');
         });
     });
+
+    describe('convert()', () => {
+
+        it('should convert a string into number value', () => {
+
+            const { number } = Lib;
+            const value = '2';
+            const ast = internals.buildAST({ value });
+
+            number().convert().parseLiteral(ast).should.equal(2);
+            number().convert().parseLiteral(ast).should.be.a('number');
+        });
+    });
 });
 
 internals.buildAST = (args) => {

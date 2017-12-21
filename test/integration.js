@@ -68,6 +68,32 @@ describe.skip('Integration', () => {
         const res = await graphql( Schema, query );
         res.data.subject.key2.should.equal(2);
     });
+
+    it('boolean()', async () => {
+
+        const query = '{ subject( arg: true ) { key3 } }';
+        const querySchema = new GraphQLObjectType({
+            name: 'Query',
+            fields: {
+                subject: {
+                    type: internals.Subject,
+                    args: {
+                        arg: {
+                            type: Lib.boolean()
+                        }
+                    },
+                    resolve(_, { arg }) {
+
+                        return internals.DB[ arg ];
+                    }
+                }
+            }
+        });
+        const Schema = new GraphQLSchema({ query: querySchema });
+
+        const res = await graphql( Schema, query );
+        res.data.subject.key3.should.equal(true);
+    });
 });
 
 internals.DB = {
@@ -76,6 +102,9 @@ internals.DB = {
     },
     2: {
         key2: 2
+    },
+    true: {
+        key3: true
     }
 };
 
@@ -87,6 +116,9 @@ internals.Subject = new GraphQLObjectType({
         },
         key2: {
             type: Lib.number()
+        },
+        key3: {
+            type: Lib.boolean()
         }
     }
 });

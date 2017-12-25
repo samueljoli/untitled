@@ -9,7 +9,7 @@ assertions.should();
 const Lib = require('../lib');
 const internals = {};
 
-describe.only('DateScalar', () => {
+describe('DateScalar', () => {
 
     it('should create a custom scalar', () => {
 
@@ -53,7 +53,7 @@ describe.only('DateScalar', () => {
             const ast = internals.buildAST({ value: future });
             const subject = () => {
 
-                date().before(Date.now()).parseLiteral(ast)
+                date().before(Date.now()).parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error);

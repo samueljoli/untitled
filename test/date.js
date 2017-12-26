@@ -35,6 +35,74 @@ describe('DateScalar', () => {
         expect(subject).to.throw(Error, 'KindError: expected DateValue, but got BooleanValue');
     });
 
+    it('should validate date string', () => {
+
+        const { date } = Lib;
+        const value = '1-2-2018';
+        const ast = internals.buildAST({ value });
+
+        date().parseLiteral(ast).should.deep.equal(new Date(value));
+    });
+
+    it('should validate milisecond date', () => {
+
+        const { date } = Lib;
+        const now = new Date();
+        const value = now.getTime();
+        const ast = internals.buildAST({ kind: 'IntValue', value });
+
+        date().parseLiteral(ast).should.deep.equal(now);
+    });
+
+    it('should validate milisecond date as string', () => {
+
+        const { date } = Lib;
+        const now = new Date();
+        const value = now.getTime();
+        const ast = internals.buildAST({ value: value.toString() });
+
+        date().parseLiteral(ast).should.deep.equal(now);
+    });
+
+    it('should throw when milisecond date is wrong', () => {
+
+        const { date } = Lib;
+        const value = '343904832904832094832048';
+        const ast = internals.buildAST({ value });
+        const subject = () => {
+
+            return date().parseLiteral(ast);
+        };
+
+        expect(subject).to.throw(Error, 'Invalid Date');
+    });
+
+    it('should throw when given an invalid date', () => {
+
+        const { date } = Lib;
+        const value = 'dfkjcxmreuf';
+        const ast = internals.buildAST({ value });
+        const subject = () => {
+
+            date().parseLiteral(ast).should.equal(value);
+        };
+
+        expect(subject).to.throw(Error, 'Invalid Date');
+    });
+
+    it('should throw for NaN', () => {
+
+        const { date } = Lib;
+        const value = NaN;
+        const ast = internals.buildAST({ value });
+        const subject = () => {
+
+            date().parseLiteral(ast).should.equal(value);
+        };
+
+        expect(subject).to.throw(Error, 'Invalid Date');
+    });
+
     describe('before()', () => {
 
         it('should validate dates that are before a specific date', () => {
@@ -43,7 +111,7 @@ describe('DateScalar', () => {
             const past = Date.now() - 100000;
             const ast = internals.buildAST({ value: past });
 
-            date().before('1-1-2018').parseLiteral(ast).should.equal(past);
+            date().before('1-1-2018').parseLiteral(ast).should.deep.equal(new Date(past));
         });
 
         it('should throw if date is note before the date specified', () => {
@@ -56,7 +124,7 @@ describe('DateScalar', () => {
                 date().before(Date.now()).parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error);
+            expect(subject).to.throw(Error, 'Date must be before');
         });
     });
 
@@ -68,7 +136,7 @@ describe('DateScalar', () => {
             const future = Date.now() + 1000000;
             const ast = internals.buildAST({ value: future });
 
-            date().after(Date.now()).parseLiteral(ast).should.equal(future);
+            date().after(Date.now()).parseLiteral(ast).should.deep.equal(new Date(future));
         });
 
         it('should throw if date is not after the date specified', () => {
@@ -81,7 +149,7 @@ describe('DateScalar', () => {
                 return date().after(Date.now()).parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error);
+            expect(subject).to.throw(Error, 'Date must be after');
         });
     });
 });

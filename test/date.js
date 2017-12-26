@@ -35,6 +35,46 @@ describe('DateScalar', () => {
         expect(subject).to.throw(Error, 'KindError: expected DateValue, but got BooleanValue');
     });
 
+    it('should validate date string', () => {
+
+        const { date } = Lib;
+        const value = '1-2-2018';
+        const ast = internals.buildAST({ value });
+
+        date().parseLiteral(ast).should.equal(value);
+    });
+
+    it('should validate milisecond date', () => {
+
+        const { date } = Lib;
+        const value = 1514851200000;
+        const ast = internals.buildAST({ kind: 'IntValue', value });
+
+        date().parseLiteral(ast).should.equal(value);
+    });
+
+    it('should validate milisecond date as string', () => {
+
+        const { date } = Lib;
+        const value = '1514851200000';
+        const ast = internals.buildAST({ value });
+
+        date().parseLiteral(ast).should.equal(value);
+    });
+
+    it.skip('should throw when given an invalid date', () => {
+
+        const { date } = Lib;
+        const value = 'dfkjcxmreuf';
+        const ast = internals.buildAST({ value });
+        const subject = () => {
+
+            date().parseLiteral(ast).should.equal(value);
+        };
+
+        expect(subject).to.throw(Error);
+    });
+
     describe('before()', () => {
 
         it('should validate dates that are before a specific date', () => {

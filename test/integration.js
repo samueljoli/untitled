@@ -3,7 +3,7 @@
 const Lab = require('lab');
 const { script, assertions } = Lab;
 const lab = exports.lab = script();
-const { describe, it } = lab;
+const { describe, it, expect } = lab;
 assertions.should();
 
 const Lib = require('../lib');
@@ -15,7 +15,7 @@ const {
 
 const internals = {};
 
-describe.skip('Integration', () => {
+describe('Integration', () => {
 
     it('string()', async () => {
 
@@ -94,6 +94,34 @@ describe.skip('Integration', () => {
         const res = await graphql( Schema, query );
         res.data.subject.key3.should.equal(true);
     });
+
+    it('date()', async () => {
+
+        const query = '{ subject( arg: "1-1-2018" ) { key4 } }';
+        const querySchema = new GraphQLObjectType({
+            name: 'Query',
+            fields: {
+                subject: {
+                    type: internals.Subject,
+                    args: {
+                        arg: {
+                            type: Lib.date()
+                        }
+                    },
+                    resolve(_, { arg }) {
+
+                        return internals.DB.date(arg);
+                    }
+                }
+            }
+        });
+        const Schema = new GraphQLSchema({ query: querySchema });
+
+        const res = await graphql( Schema, query );
+        const { subject } = res.data;
+
+        expect( subject.key4 ).to.be.an.instanceof(Date);
+    });
 });
 
 internals.DB = {
@@ -105,6 +133,12 @@ internals.DB = {
     },
     true: {
         key3: true
+    },
+    date: function (arg) {
+
+        return {
+            key4: arg
+        };
     }
 };
 
@@ -119,6 +153,9 @@ internals.Subject = new GraphQLObjectType({
         },
         key3: {
             type: Lib.boolean()
+        },
+        key4: {
+            type: Lib.date()
         }
     }
 });

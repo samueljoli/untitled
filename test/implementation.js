@@ -43,6 +43,28 @@ describe('Implementation', () => {
         string().parseValue('123').should.equal('123');
     });
 
+    describe('options()', () => {
+
+        it('should support setting configuration options', () => {
+
+            const { string } = Lib;
+
+            const subject = string().options({ convert: false });
+            subject._options.convert.should.equal(false);
+        });
+
+        it('should throw when passed a bad config', () => {
+
+            const { string } = Lib;
+            const subject = () => {
+
+                return string().options({ badKey: 'should not be here' });
+            };
+
+            expect(subject).to.throw(Error);
+        });
+    });
+
     it('should support descriptions', () => {
 
         const { string } = Lib;

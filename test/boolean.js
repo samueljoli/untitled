@@ -138,7 +138,7 @@ describe('BooleanScalar', () => {
             const ast = { kind: 'StringValue', value: '1' };
             const subject = () => {
 
-                return boolean().binary().parseLiteral(ast);
+                return boolean().options({ convert: false }).binary().parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'TODO');
@@ -150,8 +150,8 @@ describe('BooleanScalar', () => {
             const ast1 = { kind: 'StringValue', value: '1' };
             const ast2 = { kind: 'StringValue', value: '0' };
 
-            boolean().binary().convert().parseLiteral(ast1).should.equal(true);
-            boolean().binary().convert().parseLiteral(ast2).should.equal(false);
+            boolean().binary().parseLiteral(ast1).should.equal(true);
+            boolean().binary().parseLiteral(ast2).should.equal(false);
         });
 
         it('should throw when using binary with convert set to true and val is NaN', () => {
@@ -160,7 +160,7 @@ describe('BooleanScalar', () => {
             const ast = { kind: 'ListValue', value: [] };
             const subject = () => {
 
-                return boolean().binary().convert().parseLiteral(ast);
+                return boolean().binary().parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'TODO');

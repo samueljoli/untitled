@@ -23,16 +23,28 @@ describe('NumberScalar', () => {
         number().name.should.equal('NumberScalar');
     });
 
-    it('should return null for non number values', () => {
+    it('should throw for non number values', () => {
 
         const { number } = Lib;
         const ast = { value: true, kind: 'BooleanValue' };
         const subject = () => {
 
-            return number().parseLiteral(ast);
+            return number().options({ convert: false }).parseLiteral(ast);
         };
 
         expect(subject).to.throw(Error, 'KindError: expected IntValue but got BooleanValue');
+    });
+
+    it('should throw when trying to validate string with convert set to false', () => {
+
+        const { number } = Lib;
+        const ast = { value: '1', kind: 'StringValue' };
+        const subject = () => {
+
+            return number().options({ convert: false }).parseLiteral(ast);
+        };
+
+        expect(subject).to.throw(Error, 'KindError: expected IntValue but got StringValue');
     });
 
     it('should support default', () => {
@@ -45,9 +57,9 @@ describe('NumberScalar', () => {
     it('should not use default value if target is provided', () => {
 
         const { number } = Lib;
-        const ast = { kind: 'IntValue', value: 'test' };
+        const ast = { kind: 'StringValue', value: '1' };
 
-        number().default('me').parseLiteral(ast).should.equal('test');
+        number().default('me').parseLiteral(ast).should.equal(1);
     });
 
     describe('min()', () => {
@@ -236,19 +248,6 @@ describe('NumberScalar', () => {
             };
 
             expect(subject).to.throw(Error, 'number must be an integer');
-        });
-    });
-
-    describe('convert()', () => {
-
-        it('should convert a string into number value', () => {
-
-            const { number } = Lib;
-            const value = '2';
-            const ast = internals.buildAST({ value });
-
-            number().convert().parseLiteral(ast).should.equal(2);
-            number().convert().parseLiteral(ast).should.be.a('number');
         });
     });
 });

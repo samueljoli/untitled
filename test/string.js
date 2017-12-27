@@ -183,23 +183,14 @@ describe('StringScalar', () => {
             string().email().parseLiteral(ast).should.equal(value);
         });
 
-        it('should validate and return a string that contains a valid emails with strict disabled', () => {
-
-            const value = 'fodder untitled@gmail.com';
-            const { string } = Lib;
-            const ast = internals.buildAST({ value });
-
-            string().email().parseLiteral(ast).should.equal(value);
-        });
-
-        it('should throw when string is not an exact email and strict is enabled', () => {
+        it('should throw when string is not a valid address', () => {
 
             const value = 'fodder untitled@gmail.com';
             const { string } = Lib;
             const ast = internals.buildAST({ value });
             const subject = () => {
 
-                return string().email({ strict: true }).parseLiteral(ast);
+                return string().email().parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'value is not a valid email address');
@@ -215,7 +206,155 @@ describe('StringScalar', () => {
                 return string().email({ exact: true }).parseLiteral(ast);
             };
 
-            expect(subject).to.throw(Error, 'email was passed bad config');
+            expect(subject).to.throw(Error, '"exact" is not allowed');
+        });
+
+        it('throws when tldWhitelist is not an object or array', () => {
+
+            const value = 'untitled@gmail.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().email({ tldWhitelist: true }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, '"tldWhitelist" must be an array\n[2] "tldWhitelist" must be an object');
+        });
+
+        it('throws when minDomainAtoms is not a number', () => {
+
+            const value = 'untitled@gmail.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().email({ minDomainAtoms: true }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, '"minDomainAtoms" must be a number');
+        });
+
+        it('throws when minDomainAtoms is not an integer', () => {
+
+            const value = 'untitled@gmail.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().email({ minDomainAtoms: 90.4 }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, '"minDomainAtoms" must be an integer');
+        });
+
+        it('throws when minDomainAtoms is not a positive number', () => {
+
+            const value = 'untitled@gmail.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().email({ minDomainAtoms: -90.0 }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, '"minDomainAtoms" must be a positive number');
+        });
+
+        it('throws when errorLevel is not an integer', () => {
+
+            const value = 'untitled@gmail.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().email({ errorLevel: -9.5 }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, '"errorLevel" must be an integer');
+        });
+
+        it('throws when errorLevel is not a positive number', () => {
+
+            const value = 'untitled@gmail.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().email({ errorLevel: -9 }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, '"errorLevel" must be a positive number');
+        });
+
+        it('validates and return a valid email with tldWhitelist as an array', () => {
+
+            const value = 'untitled@gmail.io';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().email({ tldWhitelist: ['com', 'io'] }).parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and return a valid email with tldWhitelist as an object', () => {
+
+            const value = 'untitled@gmail.io';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().email({ tldWhitelist: { com: true, io: true } }).parseLiteral(ast).should.equal(value);
+        });
+
+        it('enforces tldWhitelist and throws if tld is not included in list', () => {
+
+            const value = 'untitled@gmail.nyc';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().email({ tldWhitelist: ['com', 'io'] }).parseLiteral(ast).should.equal(value);
+            };
+
+            expect(subject).to.throw(Error, 'value is not a valid email address');
+        });
+
+        it('should enforce minDomainAtoms and throw if condition is not met', () => {
+
+            const value = 'untitled@gmail.nyc';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().email({ minDomainAtoms: 3 }).parseLiteral(ast).should.equal(value);
+            };
+
+            expect(subject).to.throw(Error, 'value is not a valid email address');
+        });
+
+        it('should enforce errorLevel as boolean', () => {
+
+            const value = 'untitled@';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().email({ errorLevel: true }).parseLiteral(ast).should.equal(value);
+            };
+
+            expect(subject).to.throw(Error, 'value is not a valid email address');
+        });
+
+        it('should enforce errorLevel as an integer', () => {
+
+            const value = 'untitled@';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().email({ errorLevel: 2 }).parseLiteral(ast).should.equal(value);
+            };
+
+            expect(subject).to.throw(Error, 'value is not a valid email address');
         });
     });
 });

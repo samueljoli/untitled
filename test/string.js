@@ -149,7 +149,7 @@ describe('StringScalar', () => {
 
     describe('hex()', () => {
 
-        it('should support hex', () => {
+        it('should validate and return valid hex codes', () => {
 
             const value = '#ffff';
             const { string } = Lib;
@@ -169,6 +169,53 @@ describe('StringScalar', () => {
             };
 
             expect(subject).to.throw(Error, 'string is not a valid hex code');
+        });
+    });
+
+    describe('email()', () => {
+
+        it('should validate and return a valid email address', () => {
+
+            const value = 'untitled@gmail.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().email().parseLiteral(ast).should.equal(value);
+        });
+
+        it('should validate and return a string that contains a valid emails with strict disabled', () => {
+
+            const value = 'fodder untitled@gmail.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().email().parseLiteral(ast).should.equal(value);
+        });
+
+        it('should throw when string is not an exact email and strict is enabled', () => {
+
+            const value = 'fodder untitled@gmail.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().email({ strict: true }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value is not a valid email address');
+        });
+
+        it('should throw when email is passed a bad config', () => {
+
+            const value = 'untitled@gmail.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().email({ exact: true }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'email was passed bad config');
         });
     });
 });

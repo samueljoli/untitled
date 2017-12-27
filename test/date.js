@@ -105,6 +105,28 @@ describe('DateScalar', () => {
 
     describe('before()', () => {
 
+        it('throws when input is not a string', () => {
+
+            const { date } = Lib;
+            const subject = () => {
+
+                return date().before(true);
+            };
+
+            expect(subject).to.throw(Error);
+        });
+
+        it('throws when input is not an integer', () => {
+
+            const { date } = Lib;
+            const subject = () => {
+
+                return date().before(34.344);
+            };
+
+            expect(subject).to.throw(Error);
+        });
+
         it('should validate dates that are before a specific date', () => {
 
             const { date } = Lib;
@@ -129,6 +151,28 @@ describe('DateScalar', () => {
     });
 
     describe('after()', () => {
+
+        it('throws when input is not a string', () => {
+
+            const { date } = Lib;
+            const subject = () => {
+
+                return date().after(true);
+            };
+
+            expect(subject).to.throw(Error);
+        });
+
+        it('throws when input is not an integer', () => {
+
+            const { date } = Lib;
+            const subject = () => {
+
+                return date().after(34.344);
+            };
+
+            expect(subject).to.throw(Error);
+        });
 
         it('should validate dates that are after a specific date', () => {
 

@@ -64,6 +64,17 @@ describe('NumberScalar', () => {
 
     describe('min()', () => {
 
+        it('throws if input is not a string or number', () => {
+
+            const { number } = Lib;
+            const subject = () => {
+
+                return number().min(true);
+            };
+
+            expect(subject).to.throw(Error);
+        });
+
         it('should support min value', () => {
 
             const { number } = Lib;
@@ -88,6 +99,17 @@ describe('NumberScalar', () => {
     });
 
     describe('max()', () => {
+
+        it('throws if input is not a string or number', () => {
+
+            const { number } = Lib;
+            const subject = () => {
+
+                return number().max(true);
+            };
+
+            expect(subject).to.throw(Error);
+        });
 
         it('should support max value', () => {
 
@@ -173,6 +195,17 @@ describe('NumberScalar', () => {
 
     describe('multiple()', () => {
 
+        it('throws if input is not a string or number', () => {
+
+            const { number } = Lib;
+            const subject = () => {
+
+                return number().multiple(true);
+            };
+
+            expect(subject).to.throw(Error);
+        });
+
         it('should support multiple', () => {
 
             const { number } = Lib;
@@ -197,6 +230,17 @@ describe('NumberScalar', () => {
     });
 
     describe('range()', () => {
+
+        it('throws if input is not a string or number', () => {
+
+            const { number } = Lib;
+            const subject = () => {
+
+                return number().range(true, false);
+            };
+
+            expect(subject).to.throw(Error);
+        });
 
         it('should support range', () => {
 

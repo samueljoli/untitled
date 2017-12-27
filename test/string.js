@@ -65,6 +65,17 @@ describe('StringScalar', () => {
 
     describe('min()', () => {
 
+        it('throws if passed invalid input', () => {
+
+            const { string } = Lib;
+            const subject = () => {
+
+                return string().min(true);
+            };
+
+            expect(subject).to.throw(Error);
+        });
+
         it('should support min string length', () => {
 
             const { string } = Lib;
@@ -89,6 +100,17 @@ describe('StringScalar', () => {
     });
 
     describe('max()', () => {
+
+        it('throws if passed invalid input', () => {
+
+            const { string } = Lib;
+            const subject = () => {
+
+                return string().max(true);
+            };
+
+            expect(subject).to.throw(Error);
+        });
 
         it('should support max string length', () => {
 

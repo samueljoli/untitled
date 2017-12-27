@@ -124,7 +124,96 @@ describe('StringScalar', () => {
 
     describe('guid()', () => {
 
-        it('should support guid', () => {
+        it('throws when passed a bad config', () => {
+
+            const { string } = Lib;
+            const subject = () => {
+
+                return string().guid(true);
+            };
+
+            expect(subject).to.throw(Error, '"value" must be an array');
+        });
+
+        it('throws when uuid option is not valid', () => {
+
+            const { string } = Lib;
+            const subject = () => {
+
+                return string().guid(['uuidv9']);
+            };
+
+            expect(subject).to.throw(Error, 'must be one of [uuidv1, uuidv2, uuidv3, uuidv4, uuidv5]');
+        });
+
+        it('throw when passed duplicate uuid versions', () => {
+
+            const value = 'a09ececf-0514-4329-b7e7-acbd24ef53c8';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().guid(['uuidv4', 'uuidv4']).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'version 4, can not be a duplicate');
+        });
+
+        it('should validate and return a valid uuidv1 guid', () => {
+
+            const value = 'd48d222c-eb48-11e7-8c3f-9a214cf093ae';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().guid(['uuidv1']).parseLiteral(ast).should.equal(value);
+        });
+
+        it('should validate and return a valid uuidv2 guid', () => {
+
+            const value = '69593d62-71ea-2548-85e4-04fc71357423';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().guid(['uuidv2']).parseLiteral(ast).should.equal(value);
+        });
+
+        it('should validate and return a valid uuidv3 guid', () => {
+
+            const value = '69593d62-71ea-3548-85e4-04fc71357423';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().guid(['uuidv3']).parseLiteral(ast).should.equal(value);
+        });
+
+        it('should validate and return a valid uuidv4 guid', () => {
+
+            const value = 'df7cca36-3d7a-40f4-8f06-ae03cc22f045';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().guid(['uuidv4']).parseLiteral(ast).should.equal(value);
+        });
+
+        it('should validate and return a valid uuidv5 guid', () => {
+
+            const value = 'fdda765f-fc57-5604-a269-52a7df8164ec';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().guid(['uuidv5']).parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and returns multiple valid versions (1,4,5)', () => {
+
+            const value = 'a09ececf-0514-4329-b7e7-acbd24ef53c8';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().guid(['uuidv1', 'uuidv4', 'uuidv5']).parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and return a valid guid', () => {
 
             const value = 'fd65b094-321a-456c-bd9e-f251b96f72ec';
             const { string } = Lib;

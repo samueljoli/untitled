@@ -661,6 +661,40 @@ describe('StringScalar', () => {
             string().lowercase().parseLiteral(ast).should.equal('lowercase me');
         });
     });
+
+    describe('uppercase()', () => {
+
+        it('throws when string is not uppercased and convert is set to false', () => {
+
+            const value = 'lowercase';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().options({ convert: false }).uppercase().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must only contain uppercase characters');
+        });
+
+        it('validates and returns a valid uppercased string', () => {
+
+            const value = 'ALL UPPERCASE';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().uppercase().parseLiteral(ast).should.equal(value);
+        });
+
+        it('coerces string to uppercase before returning value', () => {
+
+            const value = 'uppercase me';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().uppercase().parseLiteral(ast).should.equal('UPPERCASE ME');
+        });
+    });
 });
 
 internals.buildAST = (args) => {

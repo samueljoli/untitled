@@ -720,6 +720,31 @@ describe('StringScalar', () => {
             string().alphanum().parseLiteral(ast).should.equal(value);
         });
     });
+
+    describe('token', () => {
+
+        it('throws when passed an invalid token string', () => {
+
+            const value = 'dfje#@ dsf_df45_343';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().token().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must only contain alphanumeric and underscore characters');
+        });
+
+        it('validates and returns a valid alphanumeric string', () => {
+
+            const value = 'adfjfsdf_34_4fdf';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().token().parseLiteral(ast).should.equal(value);
+        });
+    });
 });
 
 internals.buildAST = (args) => {

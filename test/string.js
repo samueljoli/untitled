@@ -627,6 +627,40 @@ describe('StringScalar', () => {
             expect(subject).to.throw(Error, 'value must be a valid relative uri');
         });
     });
+
+    describe('lowercase()', () => {
+
+        it('throws when string is not lowercased and convert is set to false', () => {
+
+            const value = 'UPPERCASE';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().options({ convert: false }).lowercase().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must only contain lowercase characters');
+        });
+
+        it('validates and returns a valid lowercased string', () => {
+
+            const value = 'all lowercase';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().lowercase().parseLiteral(ast).should.equal(value);
+        });
+
+        it('coerces string to lowercase before returning value', () => {
+
+            const value = 'LOWERCASE ME';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().lowercase().parseLiteral(ast).should.equal('lowercase me');
+        });
+    });
 });
 
 internals.buildAST = (args) => {

@@ -468,6 +468,165 @@ describe('StringScalar', () => {
             expect(subject).to.throw(Error, 'value is not a valid email address');
         });
     });
+
+    describe('uri()', () => {
+
+        it('throws when passed a bad config', () => {
+
+            const { string } = Lib;
+            const subject = () => {
+
+                return string().uri(true);
+            };
+
+            expect(subject).to.throw(Error, '"value" must be an object');
+        });
+
+        it('validates and returns a valid uri', () => {
+
+            const value = 'http://lostinthesauce.nyc';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().uri().parseLiteral(ast).should.equal(value);
+        });
+
+        it('thows when uri is not valid', () => {
+
+            const value = 'ldap://2001:db8::7/c=GB?objectClass?one';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().uri().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must be a valid uri');
+        });
+
+        it('validates and returns a valid uri using a single scheme', () => {
+
+            const value = 'http://google.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().uri({ scheme: 'http' }).parseLiteral(ast).should.equal(value);
+        });
+
+        it('throws when uri does not match provided scheme', () => {
+
+            const value = 'ftp://google.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().uri({ scheme: 'http' }).parseLiteral(ast).should.equal(value);
+            };
+
+            expect(subject).to.throw(Error, 'must be a valid uri with a scheme matching the http pattern');
+        });
+
+        it('validates and returns a valid uri using a single regex scheme', () => {
+
+            const value = 'https://abc.con';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().uri({ scheme: /https?/ }).parseLiteral(ast).should.equal(value);
+        });
+
+        it('throws when uri does not match a regex scheme', () => {
+
+            const value = 'ftp://abc.con';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().uri({ scheme: /https?/ }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'must be a valid uri with a scheme matching the https? pattern');
+        });
+
+        it('validates and returns a valid uri using multiple schemes', () => {
+
+            const value = 'https://google.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().uri({ scheme: [/https?/, 'ftp', 'file'] }).parseLiteral(ast).should.equal(value);
+        });
+
+        it('throws when passed an emtpy scheme array', () => {
+
+            const value = 'https://google.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().uri({ scheme: [] }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'scheme must have at least 1 scheme specified');
+        });
+
+        it('throws when passed an emtpy scheme object', () => {
+
+            const value = 'https://google.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().uri({ scheme: {} }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, '\"scheme\" must be a string\n[2] \"scheme\" must be an array\n[3] \"scheme\" must be an instance of \"RegExp\"\u001b[0m');
+        });
+
+        it('throws if all schemes are not valid', () => {
+
+            const value = 'https://google.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().uri({ scheme: [/https?/, '~!@#$%~'] }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, '~!@#$%~  must be a valid scheme');
+        });
+
+        it('validates and returns a valid relative uri', () => {
+
+            const value = 'foo://example.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().uri({ allowRelative: true }).parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and returns a valid relative only uri', () => {
+
+            const value = 'one/two/three?value=abc&value2=123#david-rules';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().uri({ relativeOnly: true }).parseLiteral(ast).should.equal(value);
+        });
+
+        it('description', () => {
+
+            const value = 'foo://example.com:8042/over/there?name=ferret#nose';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().uri({ relativeOnly: true }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must be a valid relative uri');
+        });
+    });
 });
 
 internals.buildAST = (args) => {

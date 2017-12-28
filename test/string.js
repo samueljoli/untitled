@@ -695,6 +695,31 @@ describe('StringScalar', () => {
             string().uppercase().parseLiteral(ast).should.equal('UPPERCASE ME');
         });
     });
+
+    describe('alphanum', () => {
+
+        it('throws when passed an invalid alphanumeric string', () => {
+
+            const value = 'dfje dsf_df45_343';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().alphanum().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must only contain alphanumeric characters');
+        });
+
+        it('validates and returns a valid alphanumeric string', () => {
+
+            const value = 'adfjfsdf344fdf';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().alphanum().parseLiteral(ast).should.equal(value);
+        });
+    });
 });
 
 internals.buildAST = (args) => {

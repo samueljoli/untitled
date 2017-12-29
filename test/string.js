@@ -745,6 +745,87 @@ describe('StringScalar', () => {
             string().token().parseLiteral(ast).should.equal(value);
         });
     });
+
+    describe('base64()', () => {
+
+        it('throws when passed an invalid input', () => {
+
+            const { string } = Lib;
+            const subject = () => {
+
+                return string().base64(true);
+            };
+
+            expect(subject).to.throw(Error, '"value" must be an object');
+        });
+
+        it('validates and returns a valid base64 string with no options', () => {
+
+            const value = 'aGFwaWpzIGlzIGZ1Y2tpbmcgYXdlc29tZQ==';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().base64().parseLiteral(ast).should.equal(value);
+        });
+
+        it('throws when passed an invalid base64 string with no options', () => {
+
+            const value = '==aGFwaWpzIGlzIGZ1Y2tpbmcgYXdlc29tZQ';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().base64().parseLiteral(ast).should.equal(value);
+            };
+
+            expect(subject).to.throw(Error, 'value must be a valid base64 string');
+        });
+
+        it('validates and returns a valid base64 string with padding explicitly required', () => {
+
+            const value = 'YW55IGNhcm5hbCBwbGVhc3VyZS4=';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().base64({ paddingRequired: true }).parseLiteral(ast).should.equal(value);
+        });
+
+        it('throws when passsed an invalid base64 string  with padding explicitly required', () => {
+
+            const value = '=YW55IGNhcm5hbCBwbGVhc3VyZS4';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().base64({ paddingRequired: true }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must be a valid base64 string');
+
+        });
+
+        it('validates and returns a valid base64 string with padding not required', () => {
+
+            const value = 'YW55IGNhcm5hbCBwbGVhc3VyZS4=';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().base64({ paddingRequired: false }).parseLiteral(ast).should.equal(value);
+        });
+
+        it('throws when passed an invalid base64 string with padding not required', () => {
+
+            const value = 'YW55IGNhcm5hbCBwbGVhc3VyZS4==';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().base64({ paddingRequired: false }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must be a valid base64 string');
+        });
+    });
 });
 
 internals.buildAST = (args) => {

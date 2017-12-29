@@ -826,6 +826,31 @@ describe('StringScalar', () => {
             expect(subject).to.throw(Error, 'value must be a valid base64 string');
         });
     });
+
+    describe('hostname()', () => {
+
+        it('validates and returns a valid hostname', () => {
+
+            const value = 'www.example.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().hostname().parseLiteral(ast).should.equal(value);
+        });
+
+        it('throws when passed an invalid hostname', () => {
+
+            const value = 'host:name';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return string().hostname().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must be a valid hostname');
+        });
+    });
 });
 
 internals.buildAST = (args) => {

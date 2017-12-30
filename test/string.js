@@ -851,6 +851,112 @@ describe('StringScalar', () => {
             expect(subject).to.throw(Error, 'value must be a valid hostname');
         });
     });
+
+    describe('creditcard()', () => {
+
+        it('validates and returns a valid credit card ( american express )', () => {
+
+            const value = '378734493671000';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().creditCard().parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and returns a valid credit card ( australian bank )', () => {
+
+            const value = '5610591081018250';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().creditCard().parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and returns a valid credit card ( dankort pbs )', () => {
+
+            const value = '5019717010103742';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().creditCard().parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and returns a valid credit card ( diners club )', () => {
+
+            const value = '38520000023237';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().creditCard().parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and returns a valid credit card ( discover )', () => {
+
+            const value = '6011000990139424';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().creditCard().parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and returns a valid credit card ( jbc )', () => {
+
+            const value = '3566002020360505';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().creditCard().parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and returns a valid credit card ( mastercard )', () => {
+
+            const value = '5105105105105100';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().creditCard().parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and returns a valid credit card ( switch/solo paymentech )', () => {
+
+            const value = '6331101999990016';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().creditCard().parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and returns a valid credit card ( visa )', () => {
+
+            const value = '4012888888881881';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().creditCard().parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and returns a valid credit card', () => {
+
+            const value = '378734493671000';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().creditCard().parseLiteral(ast).should.equal(value);
+        });
+
+        it('throws when string is not a valid credit card', () => {
+
+            const value = '422222222';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                string().creditCard().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must be a valid credit card');
+        });
+    });
 });
 
 internals.buildAST = (args) => {

@@ -23,16 +23,60 @@ describe('BooleanScalar', () => {
         boolean().name.should.equal('BooleanScalar');
     });
 
-    it('should throw an error when value is not a boolean type', () => {
+    it('converts boolean string ( true ) to a boolean', () => {
 
         const { boolean } = Lib;
         const ast = { kind: 'StringValue', value: 'true' };
+
+        boolean().parseLiteral(ast).should.equal(ast.value);
+    });
+
+    it('converts boolean string ( TRUE ) to a boolean', () => {
+
+        const { boolean } = Lib;
+        const ast = { kind: 'StringValue', value: 'TRUE' };
+
+        boolean().parseLiteral(ast).should.equal(ast.value);
+    });
+
+    it('converts boolean string ( false ) to a boolean', () => {
+
+        const { boolean } = Lib;
+        const ast = { kind: 'StringValue', value: 'false' };
+
+        boolean().parseLiteral(ast).should.equal(ast.value);
+    });
+
+    it('converts boolean string ( FALSE ) to a boolean', () => {
+
+        const { boolean } = Lib;
+        const ast = { kind: 'StringValue', value: 'FALSE' };
+
+        boolean().parseLiteral(ast).should.equal(ast.value);
+    });
+
+    it('throws when attempting to convert boolean string to a boolean and insensitive disabled', () => {
+
+        const { boolean } = Lib;
+        const ast = { kind: 'StringValue', value: 'TRUE' };
+        const subject = () => {
+
+            boolean().options({ insensitive: false }).parseLiteral(ast);
+        };
+
+        expect(subject).to.throw(Error, 'value must be a boolean');
+    });
+
+    it('throws an error when value is not a boolean type', () => {
+
+        const { boolean } = Lib;
+        const ast = { kind: 'FloatValue', value: 90.9 };
         const subject = () => {
 
             return boolean().parseLiteral(ast);
         };
 
-        expect(subject).to.throw(Error, 'KindError: expected BooleanValue, but got StringValue');
+        expect(subject).to.throw(Error, 'KindError: expected BooleanValue, but got FloatValue');
     });
 
     it('should support default value setting', () => {
@@ -53,7 +97,7 @@ describe('BooleanScalar', () => {
 
     describe('truthy()', () => {
 
-        it('should support truthy values', () => {
+        it('validates and returns a boolean value', () => {
 
             const { boolean } = Lib;
             const value = true;

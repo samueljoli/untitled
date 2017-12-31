@@ -53,6 +53,19 @@ describe('Implementation', () => {
             subject._options.convert.should.equal(false);
         });
 
+        it('should merge existing options with new', () => {
+
+            const { string } = Lib;
+
+            const subject = string();
+            const initialOptionsKeys = Object.keys(subject._options);
+
+            const modifiedSubject = subject.options({ insensitive: false });
+            const modifiedOptionsKeys = Object.keys(modifiedSubject._options);
+
+            initialOptionsKeys.should.deep.equal(modifiedOptionsKeys);
+        });
+
         it('should throw when passed a bad config', () => {
 
             const { string } = Lib;
@@ -61,7 +74,41 @@ describe('Implementation', () => {
                 return string().options({ badKey: 'should not be here' });
             };
 
-            expect(subject).to.throw(Error);
+            expect(subject).to.throw(Error, 'Invalid config options');
+        });
+    });
+
+    describe('allow()', () => {
+
+        it('supports a whitelist of values and by default is case insensitive', () => {
+
+            const { string } = Lib;
+            const ast = { kind: 'StringValue', value: 'STRING' };
+
+            string().allow('string').parseLiteral(ast).should.equal('STRING');
+        });
+    });
+
+    describe('disallow()', () => {
+
+        it('should support a blacklist of values and be case insensitive and throw an Error', () => {
+
+            const { string } = Lib;
+            const ast = { kind: 'StringValue', value: 'A' };
+            const subject = function () {
+
+                return string().disallow('a').parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value is not allowed');
+        });
+
+        it('supports a blacklist of values but ignores value if insensitive is disabled', () => {
+
+            const { string } = Lib;
+            const ast = { kind: 'StringValue', value: 'A' };
+
+            string().options({ insensitive: false }).disallow('a').parseLiteral(ast).should.equal(ast.value);
         });
     });
 
@@ -72,25 +119,4 @@ describe('Implementation', () => {
         string().describe('Thing that of which I am').description.should.equal('Thing that of which I am');
     });
 
-
-    it('should support a whitelist of values', () => {
-
-        const { string } = Lib;
-        const ast = { kind: 'StringValue', value: '' };
-
-        string().allow('').parseLiteral(ast).should.equal('');
-
-    });
-
-    it('should support a blacklist of values', () => {
-
-        const { string } = Lib;
-        const ast = { kind: 'StringValue', value: 'a' };
-        const subject = function () {
-
-            return string().disallow('a').parseLiteral(ast);
-        };
-
-        expect(subject).to.throw(Error, 'value is not allowed');
-    });
 });

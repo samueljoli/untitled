@@ -130,7 +130,7 @@ describe('DateScalar', () => {
         it('should validate dates that are before a specific date', () => {
 
             const { date } = Lib;
-            const past = Date.now() - 100000;
+            const past = new Date('1-1-2018') - 100000;
             const ast = internals.buildAST({ value: past });
 
             date().before('1-1-2018').parseLiteral(ast).should.deep.equal(new Date(past));

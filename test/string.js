@@ -957,6 +957,40 @@ describe('StringScalar', () => {
             expect(subject).to.throw(Error, 'value must be a valid credit card');
         });
     });
+
+    describe('trim()', () => {
+
+        it('throws when string contains leading or trailing whitespace and covert is set to false', () => {
+
+            const value = ' leading whitespace';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                string().trim().options({ convert: false }).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must not contain leading or trailing whitespace');
+        });
+
+        it('trims, validates and returns a string with leading or trailing whitespace', () => {
+
+            const value = ' hey';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().trim().parseLiteral(ast).should.equal('hey');
+        });
+
+        it('validates and returns strings with no leading or trailing whitespace', () => {
+
+            const value = 'hey';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().trim().parseLiteral(ast).should.equal(value);
+        });
+    });
 });
 
 internals.buildAST = (args) => {

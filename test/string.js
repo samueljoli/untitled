@@ -85,7 +85,7 @@ describe('StringScalar', () => {
             string().min(2).parseLiteral(ast).should.equal(value);
         });
 
-        it('should return null when lenght does not meet min', () => {
+        it('should return null when length does not meet min', () => {
 
             const { string } = Lib;
             const value = '1';
@@ -96,6 +96,32 @@ describe('StringScalar', () => {
             };
 
             expect(subject).to.throw(Error, 'string does not meet the minimum length specified');
+        });
+
+        it('should work in combination with max()', () => {
+
+            const { string } = Lib;
+            const value = '1';
+            const ast = internals.buildAST({ value });
+
+            string().min(1).max(2).parseLiteral(ast).should.equal(value);
+        });
+
+        it('should throw appropriate error in combination with max()', () => {
+
+            const { string } = Lib;
+            const value = 'two';
+            const ast = internals.buildAST({ value });
+
+            expect(() => {
+
+                string().min(1).max(2).parseLiteral(ast);
+            }).to.throw(Error, 'string exceeds maximum length allowed');
+
+            expect(() => {
+
+                string().min(4).max(5).parseLiteral(ast);
+            }).to.throw(Error, 'string does not meet the minimum length specified');
         });
     });
 
@@ -133,15 +159,6 @@ describe('StringScalar', () => {
 
             expect(subject).to.throw(Error, 'string exceeds maximum length allowed');
         });
-    });
-
-    it('should support min and max', () => {
-
-        const { string } = Lib;
-        const value = '1234';
-        const ast = internals.buildAST({ value });
-
-        string().min(2).max(5).parseLiteral(ast).should.equal('1234');
     });
 
     describe('guid()', () => {
@@ -262,7 +279,7 @@ describe('StringScalar', () => {
 
         it('should validate and return valid hex codes', () => {
 
-            const value = '#ffff';
+            const value = '#FFFFFF';
             const { string } = Lib;
             const ast = internals.buildAST({ value });
 
@@ -280,6 +297,33 @@ describe('StringScalar', () => {
             };
 
             expect(subject).to.throw(Error, 'string is not a valid hex code');
+        });
+
+        it('should work in combination with min()', () => {
+
+            const value = '#ffffff';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().min(4).hex().parseLiteral(ast);
+        });
+
+        it('should throw appropriate error in combination with min()', () => {
+
+            const { string } = Lib;
+
+            expect(() => {
+
+                const ast = internals.buildAST({ value: '#ffff' });
+
+                string().min(7).hex().parseLiteral(ast);
+            }).to.throw(Error, 'string does not meet the minimum length specified');
+            expect(() => {
+
+                const ast = internals.buildAST({ value: '#0f' });
+
+                string().min(2).hex().parseLiteral(ast);
+            }).to.throw(Error, 'string is not a valid hex code');
         });
     });
 

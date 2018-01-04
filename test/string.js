@@ -1035,6 +1035,79 @@ describe('StringScalar', () => {
             string().trim().parseLiteral(ast).should.equal(value);
         });
     });
+
+    describe('regex()', () => {
+
+        it('throws when input is not a string or regex', () => {
+
+            const value = '0101';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                string().regex({}).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, '\"value\" must be an instance of \"RegExp\"');
+        });
+
+        it('throws when options is not valid', () => {
+
+            const value = '0101';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                string().regex(/^\w+$/, true).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, '\"value\" must be an object');
+        });
+
+        it('throws when string does not pass regex pattern', () => {
+
+            const value = '0101';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            expect(() => {
+
+                string().regex(/[a-z]/i).parseLiteral(ast);
+
+            }).to.throw(Error, 'value does not match regex');
+        });
+
+        it.skip('should not include a pattern name by default', () => {
+
+            const value = 'abcd';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                string().regex(/[0-9]+/).parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, '"value" with value abcd fails to match the required pattern: /[0-9]+/');
+        });
+
+        it('validates and returns a valid string that passes a given regex pattern', () => {
+
+            const value = '0101';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().regex(/[0-9]+/, { name: 'numbers' }).parseLiteral(ast);
+        });
+
+        it('validates and returns a valid string that passes a given regex pattern with invert enabled', () => {
+
+            const value = 'abcd';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().regex(/[0-9]+/, { name: 'numbers', invert: true }).parseLiteral(ast);
+        });
+    });
 });
 
 internals.buildAST = (args) => {

@@ -511,6 +511,52 @@ describe('StringScalar', () => {
 
             expect(subject).to.throw(Error, 'value is not a valid email address');
         });
+
+        it('should work in combination with min(), max(), trim()', () => {
+
+            const value = '  untitled@gmail.com';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().min(2).max(30).trim().email().parseLiteral(ast).should.equal('untitled@gmail.com');
+        });
+
+        it('throws appropriate error when used in combination with min(), max(), trim()', () => {
+
+            const { string } = Lib;
+
+            expect(() => {
+
+                const ast = internals.buildAST({ value: 'me@gmail.com' });
+
+                string().min(20).email().parseLiteral(ast);
+
+            }).to.throw(Error, 'string does not meet the minimum length specified');
+
+            expect(() => {
+
+                const ast = internals.buildAST({ value: 'me@gmail.com' });
+
+                string().min(4).max(8).parseLiteral(ast);
+
+            }).to.throw(Error, 'string exceeds maximum length allowed');
+
+            expect(() => {
+
+                const ast = internals.buildAST({ value: ' me@gmail.com' });
+
+                string().min(4).max(15).trim().options({ convert: false }).parseLiteral(ast);
+
+            }).to.throw(Error, 'value must not contain leading or trailing whitespace');
+
+            expect(() => {
+
+                const ast = internals.buildAST({ value: 'untitled@' });
+
+                string().min(2).max(10).email().parseLiteral(ast);
+
+            }).to.throw(Error, 'value is not a valid email address');
+        });
     });
 
     describe('uri()', () => {
@@ -658,7 +704,7 @@ describe('StringScalar', () => {
             string().uri({ relativeOnly: true }).parseLiteral(ast).should.equal(value);
         });
 
-        it('description', () => {
+        it('throws when string is not a relative uri', () => {
 
             const value = 'foo://example.com:8042/over/there?name=ferret#nose';
             const { string } = Lib;
@@ -1033,6 +1079,15 @@ describe('StringScalar', () => {
             const ast = internals.buildAST({ value });
 
             string().trim().parseLiteral(ast).should.equal(value);
+        });
+
+        it('validates and returns strings with no leading or trailing whitespace and convert set to false', () => {
+
+            const value = 'hey';
+            const { string } = Lib;
+            const ast = internals.buildAST({ value });
+
+            string().trim().options({ convert: false }).parseLiteral(ast).should.equal(value);
         });
     });
 

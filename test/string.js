@@ -45,7 +45,7 @@ describe('StringScalar', () => {
             return string().parseLiteral(ast);
         };
 
-        expect(subject).to.throw(Error, 'string can not be empty');
+        expect(subject).to.throw(Error, 'value can not be empty');
     });
 
     it('should support default', () => {

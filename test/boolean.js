@@ -97,6 +97,56 @@ describe('BooleanScalar', () => {
 
     describe('truthy()', () => {
 
+        it('should accept a single value to be used as whitelist of truthy values', () => {
+
+            const { boolean } = Lib;
+            const value = 'yes';
+            const ast = { kind: 'StringValue', value };
+
+            boolean().truthy('yes').parseLiteral(ast).should.equal(value);
+        });
+
+        it('should accept a single value to be used as a whitelist of truthy values and be case insensitve', () => {
+
+            const { boolean } = Lib;
+            const value = 'Yes';
+            const ast = { kind: 'StringValue', value };
+
+            boolean().truthy('yes').parseLiteral(ast).should.equal('yes');
+        });
+
+        it('should accept an array of values to be used as a whitelist of truthy values', () => {
+
+            const { boolean } = Lib;
+            const value = 'oui';
+            const ast = { kind: 'StringValue', value };
+
+            boolean().truthy(['oui']).parseLiteral(ast).should.equal(value);
+        });
+
+        it('should accept an array of values to be used as a whitelist of truthy values and be case insensitive', () => {
+
+            const { boolean } = Lib;
+            const value = 'Oui';
+            const ast = { kind: 'StringValue', value };
+
+            boolean().truthy(['oui']).parseLiteral(ast).should.equal('oui');
+        });
+
+        it('throws when passed whitelist and provided value is not included', () => {
+
+            const { boolean } = Lib;
+            const value = 'yes';
+            const ast = { kind: 'StringValue', value };
+
+            expect(() => {
+
+                boolean().truthy('oui').parseLiteral(ast);
+
+            }).to.throw(Error, 'value: "yes" is not truthy');
+
+        });
+
         it('validates and returns a boolean value', () => {
 
             const { boolean } = Lib;
@@ -118,9 +168,70 @@ describe('BooleanScalar', () => {
 
             expect(subject).to.throw(Error, 'value must be truthy');
         });
+
+        it('throws when value is not boolean type and whitelist is not provided', () => {
+
+            const { boolean } = Lib;
+            const value = 'ok';
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return boolean().truthy().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must be truthy');
+        });
     });
 
     describe('falsy()', () => {
+
+        it('should accept a single value to be used as whitelist of falsy values', () => {
+
+            const { boolean } = Lib;
+            const value = 'no';
+            const ast = { kind: 'StringValue', value };
+
+            boolean().falsy('no').parseLiteral(ast).should.equal(value);
+        });
+
+        it('should accept a single value to be used as a whitelist of falsy values and be case insensitive', () => {
+
+            const { boolean } = Lib;
+            const value = 'No';
+            const ast = { kind: 'StringValue', value };
+
+            boolean().falsy('no').parseLiteral(ast).should.equal('no');
+        });
+
+        it('should accept an array of values to be used asa whitelist of falsy values', () => {
+
+            const { boolean } = Lib;
+            const value = 'no';
+            const ast = { kind: 'StringValue', value };
+
+            boolean().falsy(['no']).parseLiteral(ast).should.equal(value);
+        });
+
+        it('should accept an array of values to be used asa whitelist of falsy values and be case insensitive', () => {
+
+            const { boolean } = Lib;
+            const value = 'No';
+            const ast = { kind: 'StringValue', value };
+
+            boolean().falsy(['no']).parseLiteral(ast).should.equal('no');
+        });
+
+        it('throws when passed a whitelist and provided value is not included', () => {
+
+            const { boolean } = Lib;
+            const value = 'no';
+            const ast = { kind: 'StringValue', value };
+
+            expect(() => {
+
+                boolean().falsy(['nope']).parseLiteral(ast);
+            }).to.throw(Error, 'value: "no" is not falsy');
+        });
 
         it('should support falsy values', () => {
 
@@ -135,6 +246,19 @@ describe('BooleanScalar', () => {
 
             const { boolean } = Lib;
             const value = true;
+            const ast = internals.buildAST({ value });
+            const subject = () => {
+
+                return boolean().falsy().parseLiteral(ast);
+            };
+
+            expect(subject).to.throw(Error, 'value must be falsy');
+        });
+
+        it('should throw an error when value is falsy and not a boolean type', () => {
+
+            const { boolean } = Lib;
+            const value = 'naw';
             const ast = internals.buildAST({ value });
             const subject = () => {
 

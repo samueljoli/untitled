@@ -115,13 +115,27 @@ describe('BooleanScalar', () => {
             boolean().truthy('yes').parseLiteral(ast).should.equal('yes');
         });
 
+        it('throws when passed a single value whitelist and insensitve is disabled', () => {
+
+            const { boolean } = Lib;
+
+            expect(() => {
+
+                const ast = { kind: 'StringValue', value: 'Yes' };
+
+                boolean().truthy('yes').options({ insensitive: false }).parseLiteral(ast);
+
+            }).to.throw(Error, 'value must be a boolean');
+        });
+
         it('should accept an array of values to be used as a whitelist of truthy values', () => {
 
             const { boolean } = Lib;
-            const value = 'oui';
-            const ast = { kind: 'StringValue', value };
+            const whitelist = ['oui', 'si', 'yes'];
 
-            boolean().truthy(['oui']).parseLiteral(ast).should.equal(value);
+            boolean().truthy(whitelist).parseLiteral({ kind: 'StringValue', value: 'oui' }).should.equal('oui');
+            boolean().truthy(whitelist).parseLiteral({ kind: 'StringValue', value: 'si' }).should.equal('si');
+            boolean().truthy(whitelist).parseLiteral({ kind: 'StringValue', value: 'yes' }).should.equal('yes');
         });
 
         it('should accept an array of values to be used as a whitelist of truthy values and be case insensitive', () => {
@@ -131,6 +145,19 @@ describe('BooleanScalar', () => {
             const ast = { kind: 'StringValue', value };
 
             boolean().truthy(['oui']).parseLiteral(ast).should.equal('oui');
+        });
+
+        it('throws when passed a whitelist array and insensitve is disabled', () => {
+
+            const { boolean } = Lib;
+
+            expect(() => {
+
+                const ast = { kind: 'StringValue', value: 'Oui' };
+
+                boolean().truthy(['oui']).options({ insensitive: false }).parseLiteral(ast);
+
+            }).to.throw(Error, 'value must be a boolean');
         });
 
         it('throws when passed whitelist and provided value is not included', () => {
@@ -203,13 +230,28 @@ describe('BooleanScalar', () => {
             boolean().falsy('no').parseLiteral(ast).should.equal('no');
         });
 
+        it('throws when passed a single value whitelist and insensitive is disabled', () => {
+
+            const { boolean } = Lib;
+
+            expect(() => {
+
+                const ast = { kind: 'StringValue', value: 'No' };
+
+                boolean().falsy('no').options({ insensitive: false }).parseLiteral(ast);
+
+            }).to.throw(Error, 'value must be a boolean');
+        });
+
         it('should accept an array of values to be used asa whitelist of falsy values', () => {
 
             const { boolean } = Lib;
-            const value = 'no';
-            const ast = { kind: 'StringValue', value };
+            const kind = 'StringValue';
+            const whitelist = ['no', 'nope', 'nah'];
 
-            boolean().falsy(['no']).parseLiteral(ast).should.equal(value);
+            boolean().falsy(whitelist).parseLiteral({ kind, value: 'no' }).should.equal('no');
+            boolean().falsy(whitelist).parseLiteral({ kind, value: 'nah' }).should.equal('nah');
+            boolean().falsy(whitelist).parseLiteral({ kind, value: 'nope' }).should.equal('nope');
         });
 
         it('should accept an array of values to be used asa whitelist of falsy values and be case insensitive', () => {
@@ -219,6 +261,19 @@ describe('BooleanScalar', () => {
             const ast = { kind: 'StringValue', value };
 
             boolean().falsy(['no']).parseLiteral(ast).should.equal('no');
+        });
+
+        it('throws when passed a whitelist array and insensitive is disabled', () => {
+
+            const { boolean } = Lib;
+
+            expect(() => {
+
+                const ast = { kind: 'StringValue', value: 'No' };
+
+                boolean().falsy(['no']).options({ insensitive: false }).parseLiteral(ast);
+
+            }).to.throw(Error, 'value must be a boolean');
         });
 
         it('throws when passed a whitelist and provided value is not included', () => {

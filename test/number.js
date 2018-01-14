@@ -16,7 +16,7 @@ describe('NumberScalar', () => {
         const { number } = Lib;
         const subject = () => {
 
-            return number();
+            number();
         };
 
         expect(subject).to.not.throw();
@@ -29,7 +29,7 @@ describe('NumberScalar', () => {
         const ast = { value: true, kind: 'BooleanValue' };
         const subject = () => {
 
-            return number().options({ convert: false }).parseLiteral(ast);
+            number().options({ convert: false }).parseLiteral(ast);
         };
 
         expect(subject).to.throw(Error, 'KindError: expected IntValue but got BooleanValue');
@@ -41,7 +41,7 @@ describe('NumberScalar', () => {
         const ast = { value: '1', kind: 'StringValue' };
         const subject = () => {
 
-            return number().options({ convert: false }).parseLiteral(ast);
+            number().options({ convert: false }).parseLiteral(ast);
         };
 
         expect(subject).to.throw(Error, 'KindError: expected IntValue but got StringValue');
@@ -69,7 +69,7 @@ describe('NumberScalar', () => {
             const { number } = Lib;
             const subject = () => {
 
-                return number().min(true);
+                number().min(true);
             };
 
             expect(subject).to.throw(Error);
@@ -91,7 +91,7 @@ describe('NumberScalar', () => {
             const ast = internals.buildAST({ value });
             const subject = () => {
 
-                return number().min(2).parseLiteral(ast);
+                number().min(2).parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'number does not meet the minimum value specified');
@@ -105,7 +105,7 @@ describe('NumberScalar', () => {
             const { number } = Lib;
             const subject = () => {
 
-                return number().max(true);
+                number().max(true);
             };
 
             expect(subject).to.throw(Error);
@@ -127,7 +127,7 @@ describe('NumberScalar', () => {
             const ast = internals.buildAST({ value });
             const subject = () => {
 
-                return number().max(2).parseLiteral(ast);
+                number().max(2).parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'number exceeds maximum allowed');
@@ -161,7 +161,7 @@ describe('NumberScalar', () => {
             const ast = internals.buildAST({ value });
             const subject = () => {
 
-                return number().positive().parseLiteral(ast);
+                number().positive().parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'number is not positive');
@@ -186,7 +186,7 @@ describe('NumberScalar', () => {
             const ast = internals.buildAST({ value });
             const subject = () => {
 
-                return number().negative().parseLiteral(ast);
+                number().negative().parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'number is not negative');
@@ -200,7 +200,7 @@ describe('NumberScalar', () => {
             const { number } = Lib;
             const subject = () => {
 
-                return number().multiple(true);
+                number().multiple(true);
             };
 
             expect(subject).to.throw(Error);
@@ -222,7 +222,7 @@ describe('NumberScalar', () => {
             const ast = internals.buildAST({ value });
             const subject = () => {
 
-                return number().multiple(5).parseLiteral(ast);
+                number().multiple(5).parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'number must be a multiple of: ');
@@ -236,7 +236,7 @@ describe('NumberScalar', () => {
             const { number } = Lib;
             const subject = () => {
 
-                return number().range(true, false);
+                number().range(true, false);
             };
 
             expect(subject).to.throw(Error);
@@ -258,11 +258,11 @@ describe('NumberScalar', () => {
             const ast2 = internals.buildAST({ value: 0 });
             const subject1 = () => {
 
-                return number().range(1, 3).parseLiteral(ast1);
+                number().range(1, 3).parseLiteral(ast1);
             };
             const subject2 = () => {
 
-                return number().range(1, 3).parseLiteral(ast2);
+                number().range(1, 3).parseLiteral(ast2);
             };
 
             expect(subject1).to.throw(Error, 'number must fall within specified range');
@@ -288,7 +288,7 @@ describe('NumberScalar', () => {
             const ast = internals.buildAST({ value });
             const subject = () => {
 
-                return number().integer().parseLiteral(ast);
+                number().integer().parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'number must be an integer');

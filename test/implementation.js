@@ -71,7 +71,7 @@ describe('Implementation', () => {
             const { string } = Lib;
             const subject = () => {
 
-                return string().options({ badKey: 'should not be here' });
+                string().options({ badKey: 'should not be here' });
             };
 
             expect(subject).to.throw(Error, 'Invalid config options');
@@ -97,7 +97,7 @@ describe('Implementation', () => {
             const ast = { kind: 'StringValue', value: 'A' };
             const subject = function () {
 
-                return string().disallow('a').parseLiteral(ast);
+                string().disallow('a').parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'value is not allowed');

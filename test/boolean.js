@@ -16,7 +16,7 @@ describe('BooleanScalar', () => {
         const { boolean } = Lib;
         const subject = () => {
 
-            return boolean();
+            boolean();
         };
 
         expect(subject).to.not.throw();
@@ -73,7 +73,7 @@ describe('BooleanScalar', () => {
         const ast = { kind: 'FloatValue', value: 90.9 };
         const subject = () => {
 
-            return boolean().parseLiteral(ast);
+            boolean().parseLiteral(ast);
         };
 
         expect(subject).to.throw(Error, 'KindError: expected BooleanValue, but got FloatValue');
@@ -190,7 +190,7 @@ describe('BooleanScalar', () => {
             const ast = internals.buildAST({ value });
             const subject = () => {
 
-                return boolean().truthy().parseLiteral(ast);
+                boolean().truthy().parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'value must be truthy');
@@ -203,7 +203,7 @@ describe('BooleanScalar', () => {
             const ast = internals.buildAST({ value });
             const subject = () => {
 
-                return boolean().truthy().parseLiteral(ast);
+                boolean().truthy().parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'value must be truthy');
@@ -304,7 +304,7 @@ describe('BooleanScalar', () => {
             const ast = internals.buildAST({ value });
             const subject = () => {
 
-                return boolean().falsy().parseLiteral(ast);
+                boolean().falsy().parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'value must be falsy');
@@ -317,7 +317,7 @@ describe('BooleanScalar', () => {
             const ast = internals.buildAST({ value });
             const subject = () => {
 
-                return boolean().falsy().parseLiteral(ast);
+                boolean().falsy().parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'value must be falsy');
@@ -361,7 +361,7 @@ describe('BooleanScalar', () => {
             const ast = { kind: 'StringValue', value: '1' };
             const subject = () => {
 
-                return boolean().options({ convert: false }).binary().parseLiteral(ast);
+                boolean().options({ convert: false }).binary().parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'TODO');
@@ -383,7 +383,7 @@ describe('BooleanScalar', () => {
             const ast = { kind: 'ListValue', value: [] };
             const subject = () => {
 
-                return boolean().binary().parseLiteral(ast);
+                boolean().binary().parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'TODO');

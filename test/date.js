@@ -16,7 +16,7 @@ describe('DateScalar', () => {
         const { date } = Lib;
         const subject = () => {
 
-            return date();
+            date();
         };
 
         expect(subject).to.not.throw();
@@ -29,7 +29,7 @@ describe('DateScalar', () => {
         const ast = { value: true, kind: 'BooleanValue' };
         const subject = () => {
 
-            return date().parseLiteral(ast);
+            date().parseLiteral(ast);
         };
 
         expect(subject).to.throw(Error, 'KindError: expected DateValue, but got BooleanValue');
@@ -71,7 +71,7 @@ describe('DateScalar', () => {
         const ast = internals.buildAST({ value });
         const subject = () => {
 
-            return date().parseLiteral(ast);
+            date().parseLiteral(ast);
         };
 
         expect(subject).to.throw(Error, 'Invalid Date');
@@ -110,7 +110,7 @@ describe('DateScalar', () => {
             const { date } = Lib;
             const subject = () => {
 
-                return date().before(true);
+                date().before(true);
             };
 
             expect(subject).to.throw(Error);
@@ -121,7 +121,7 @@ describe('DateScalar', () => {
             const { date } = Lib;
             const subject = () => {
 
-                return date().before(34.344);
+                date().before(34.344);
             };
 
             expect(subject).to.throw(Error);
@@ -157,7 +157,7 @@ describe('DateScalar', () => {
             const { date } = Lib;
             const subject = () => {
 
-                return date().after(true);
+                date().after(true);
             };
 
             expect(subject).to.throw(Error);
@@ -168,7 +168,7 @@ describe('DateScalar', () => {
             const { date } = Lib;
             const subject = () => {
 
-                return date().after(34.344);
+                date().after(34.344);
             };
 
             expect(subject).to.throw(Error);
@@ -190,7 +190,7 @@ describe('DateScalar', () => {
             const ast = internals.buildAST({ value: past });
             const subject = () => {
 
-                return date().after(Date.now()).parseLiteral(ast);
+                date().after(Date.now()).parseLiteral(ast);
             };
 
             expect(subject).to.throw(Error, 'Date must be after');

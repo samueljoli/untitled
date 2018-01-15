@@ -9,7 +9,7 @@ assertions.should();
 const Lib = require('../lib');
 const internals = {};
 
-describe.only('StringScalar', () => {
+describe('StringScalar', () => {
 
     it('should create a custom scalar type', () => {
 

@@ -1,4 +1,4 @@
-/*'use strict';
+'use strict';
 
 const Lab = require('lab');
 const { script, assertions } = Lab;
@@ -158,4 +158,4 @@ internals.Subject = new GraphQLObjectType({
             type: Lib.date()
         }
     }
-}); */
+});

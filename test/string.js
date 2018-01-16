@@ -11,6 +11,17 @@ const internals = {};
 
 describe('StringScalar', () => {
 
+    it('test', () => {
+        const { string } = Lib;
+
+        string();
+        string().min(2);
+        string().min(2).max(4);
+        string().min(2).max(4).parseLiteral({ kind: 'StringValue', value: 'me' });
+        
+        string().max(4).min(2).parseLiteral({ kind: 'StringValue', value: 'me' })
+    });
+
     it('should create a custom scalar type', () => {
 
         const { string } = Lib;
@@ -20,7 +31,7 @@ describe('StringScalar', () => {
         };
 
         expect(subject).to.not.throw();
-        string().name.should.equal('StringScalar');
+        string().type.name.should.equal('StringScalar');
     });
 
     it('should return null for non string values', () => {
@@ -46,13 +57,6 @@ describe('StringScalar', () => {
         };
 
         expect(subject).to.throw(Error, 'value can not be empty');
-    });
-
-    it('should support default', () => {
-
-        const { string } = Lib;
-
-        string().default('default value').parseLiteral().should.equal('default value');
     });
 
     it('should not use default value if target is provided', () => {

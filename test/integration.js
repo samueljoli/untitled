@@ -17,6 +17,14 @@ const internals = {};
 
 describe('Integration', () => {
 
+    it('default()', () => {
+        //TODO: Implement me 
+    });
+
+    it('description()', () => {
+        
+    });
+
     it('string()', async () => {
 
         const query = '{ subject( arg: "a") { key1 } }';

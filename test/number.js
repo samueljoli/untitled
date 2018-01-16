@@ -47,21 +47,6 @@ describe('NumberScalar', () => {
         expect(subject).to.throw(Error, 'KindError: expected IntValue but got StringValue');
     });
 
-    it('should support default', () => {
-
-        const { number } = Lib;
-
-        number().default('default value').parseLiteral().should.equal('default value');
-    });
-
-    it('should not use default value if target is provided', () => {
-
-        const { number } = Lib;
-        const ast = { kind: 'StringValue', value: '1' };
-
-        number().default('me').parseLiteral(ast).should.equal(1);
-    });
-
     describe('min()', () => {
 
         it('throws if input is not a string or number', () => {

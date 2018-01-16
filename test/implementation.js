@@ -112,11 +112,29 @@ describe('Implementation', () => {
         });
     });
 
+    describe('empty()', () => {
+
+        it('should return undefined for any value matching the provied schema', () => {
+
+            const { string } = Lib;
+            const ast = { kind: 'StringValue', value: 'test' };
+
+           (string().empty('test').parseLiteral(ast) === undefined).should.equal(true);
+        });
+
+        it('should work in combination with default()', () => {
+
+            const { string } = Lib;
+            const ast = { kind: 'StringValue', value: 'test' };
+
+            string().empty('test').default('me').parseLiteral(ast).should.equal('me');
+        });
+    });
+
     it('should support descriptions', () => {
 
         const { string } = Lib;
 
         string().describe('Thing that of which I am').description.should.equal('Thing that of which I am');
     });
-
 });

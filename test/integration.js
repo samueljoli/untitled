@@ -19,7 +19,7 @@ describe('Integration', () => {
 
     it('string()', async () => {
 
-        const query = '{ subject( arg: "a") { key1 } }';
+        const query = '{ subject( arg: "a", arg2: "b") { key1 } }';
         const querySchema = new GraphQLObjectType({
             name: 'Query',
             fields: {
@@ -28,9 +28,10 @@ describe('Integration', () => {
                     args: {
                         arg: {
                             type: Lib.string()
-                        }
+                        },
+                        arg2: { type: Lib.string().min(1) }
                     },
-                    resolve(_, { arg }) {
+                    resolve(_, { arg, arg2 }) {
 
                         return internals.DB[ arg ];
                     }

@@ -17,111 +17,117 @@ const internals = {};
 
 describe('Integration', () => {
 
-    it('string()', async () => {
+    describe('simple', () => {
 
-        const query = '{ subject( arg: "a", arg2: "b") { key1 } }';
-        const querySchema = new GraphQLObjectType({
-            name: 'Query',
-            fields: {
-                subject: {
-                    type: internals.Subject,
-                    args: {
-                        arg: {
-                            type: Lib.string()
+        it('string()', async () => {
+
+            const query = '{ subject( arg: "a", arg2: "b") { key1 } }';
+            const querySchema = new GraphQLObjectType({
+                name: 'Query',
+                fields: {
+                    subject: {
+                        type: internals.Subject,
+                        args: {
+                            arg: {
+                                type: Lib.string()
+                            },
+                            arg2: { type: Lib.string().min(1) }
                         },
-                        arg2: { type: Lib.string().min(1) }
-                    },
-                    resolve(_, { arg, arg2 }) {
+                        resolve(_, { arg, arg2 }) {
 
-                        return internals.DB[ arg ];
+                            return internals.DB[ arg ];
+                        }
                     }
                 }
-            }
-        });
-        const Schema = new GraphQLSchema({ query: querySchema });
+            });
+            const Schema = new GraphQLSchema({ query: querySchema });
 
-        const res = await graphql( Schema, query );
-        res.data.subject.key1.should.equal('A');
+            const res = await graphql( Schema, query );
+            res.data.subject.key1.should.equal('A');
+        });
+
+        it('number()', async () => {
+
+            const query = '{ subject( arg: 2 ) { key2 } }';
+            const querySchema = new GraphQLObjectType({
+                name: 'Query',
+                fields: {
+                    subject: {
+                        type: internals.Subject,
+                        args: {
+                            arg: {
+                                type: Lib.number()
+                            }
+                        },
+                        resolve(_, { arg }) {
+
+                            return internals.DB[ arg ];
+                        }
+                    }
+                }
+            });
+            const Schema = new GraphQLSchema({ query: querySchema });
+
+            const res = await graphql( Schema, query );
+            res.data.subject.key2.should.equal(2);
+        });
+
+        it('boolean()', async () => {
+
+            const query = '{ subject( arg: true ) { key3 } }';
+            const querySchema = new GraphQLObjectType({
+                name: 'Query',
+                fields: {
+                    subject: {
+                        type: internals.Subject,
+                        args: {
+                            arg: {
+                                type: Lib.boolean()
+                            }
+                        },
+                        resolve(_, { arg }) {
+
+                            return internals.DB[ arg ];
+                        }
+                    }
+                }
+            });
+            const Schema = new GraphQLSchema({ query: querySchema });
+
+            const res = await graphql( Schema, query );
+            res.data.subject.key3.should.equal(true);
+        });
+
+        it('date()', async () => {
+
+            const query = '{ subject( arg: "1-1-2018" ) { key4 } }';
+            const querySchema = new GraphQLObjectType({
+                name: 'Query',
+                fields: {
+                    subject: {
+                        type: internals.Subject,
+                        args: {
+                            arg: {
+                                type: Lib.date()
+                            }
+                        },
+                        resolve(_, { arg }) {
+
+                            return internals.DB.date(arg);
+                        }
+                    }
+                }
+            });
+            const Schema = new GraphQLSchema({ query: querySchema });
+
+            const res = await graphql( Schema, query );
+            const { subject } = res.data;
+
+            expect( subject.key4 ).to.be.an.instanceof(Date);
+        });
     });
 
-    it('number()', async () => {
-
-        const query = '{ subject( arg: 2 ) { key2 } }';
-        const querySchema = new GraphQLObjectType({
-            name: 'Query',
-            fields: {
-                subject: {
-                    type: internals.Subject,
-                    args: {
-                        arg: {
-                            type: Lib.number()
-                        }
-                    },
-                    resolve(_, { arg }) {
-
-                        return internals.DB[ arg ];
-                    }
-                }
-            }
-        });
-        const Schema = new GraphQLSchema({ query: querySchema });
-
-        const res = await graphql( Schema, query );
-        res.data.subject.key2.should.equal(2);
-    });
-
-    it('boolean()', async () => {
-
-        const query = '{ subject( arg: true ) { key3 } }';
-        const querySchema = new GraphQLObjectType({
-            name: 'Query',
-            fields: {
-                subject: {
-                    type: internals.Subject,
-                    args: {
-                        arg: {
-                            type: Lib.boolean()
-                        }
-                    },
-                    resolve(_, { arg }) {
-
-                        return internals.DB[ arg ];
-                    }
-                }
-            }
-        });
-        const Schema = new GraphQLSchema({ query: querySchema });
-
-        const res = await graphql( Schema, query );
-        res.data.subject.key3.should.equal(true);
-    });
-
-    it('date()', async () => {
-
-        const query = '{ subject( arg: "1-1-2018" ) { key4 } }';
-        const querySchema = new GraphQLObjectType({
-            name: 'Query',
-            fields: {
-                subject: {
-                    type: internals.Subject,
-                    args: {
-                        arg: {
-                            type: Lib.date()
-                        }
-                    },
-                    resolve(_, { arg }) {
-
-                        return internals.DB.date(arg);
-                    }
-                }
-            }
-        });
-        const Schema = new GraphQLSchema({ query: querySchema });
-
-        const res = await graphql( Schema, query );
-        const { subject } = res.data;
-
-        expect( subject.key4 ).to.be.an.instanceof(Date);
+    describe('hard', () => {
     });
 });
 
